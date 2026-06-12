@@ -1,125 +1,260 @@
-# 🏛️ Advanced Banking Management System (DBMS Project)
+# Banking Management System
 
-A sophisticated, full-stack banking platform designed to demonstrate advanced Database Management System (DBMS) concepts, including complex schema design, stored procedures, database triggers, and real-time analytics.
-
----
-
-## 📖 Table of Contents
-- [Project Overview](#project-overview)
-- [System Architecture](#system-architecture)
-- [Key Features](#key-features)
-- [Database Design (The DBMS Core)](#database-design)
-  - [Schema Overview](#schema-overview)
-  - [Triggers (Automated Logic)](#triggers)
-  - [Stored Procedures](#stored-procedures)
-- [Tech Stack](#tech-stack)
-- [Installation & Setup](#installation--setup)
-- [Usage Guide](#usage-guide)
+A full-stack Banking Management System developed using MySQL, Python, Flask, React, and TypeScript. The project manages customers, accounts, transactions, cards, loans, branches, and employees, providing a robust platform for modern banking operations.
 
 ---
 
-## 🌟 Project Overview
-This system is built to manage the day-to-day operations of a modern bank. It handles everything from customer onboarding and account management to high-stakes operations like loan disbursements and card security.
+## Features
 
-**The highlight of this project is its Database Layer**, which uses native MySQL features to ensure data integrity and automate business logic without relying solely on the application code.
+### Database Management
+- Customer Management
+- Account Management
+- Transaction Tracking
+- Card Issuance & Security
+- Loan Processing & Disbursement
+- Branch & Employee Management
 
----
+### SQL Operations
+- CRUD Operations
+- INNER JOIN (Customer & Account details)
+- LEFT JOIN (Customers without accounts)
+- GROUP BY & HAVING (Branch performance analysis)
+- Subqueries (Top transaction identification)
+- Correlated Subqueries (Balance comparisons)
+- Stored Procedures (Fund Transfers, Loan Disbursement)
+- Triggers (Automatic Balance Updates, Audit Logging)
 
-## 🏗️ System Architecture
-The application follows a standard **Client-Server Architecture**:
-- **Frontend**: A modern, responsive React Dashboard built with TypeScript and Tailwind CSS.
-- **Backend**: A Python Flask REST API that handles business logic and communicates with the database.
-- **Database**: A MySQL relational database where the "heavy lifting" (triggers/procedures) happens.
-
----
-
-## 🚀 Key Features
-
-### 🏦 Core Banking
-- **Customer Onboarding**: Create and manage customer profiles with automated ID generation.
-- **Multi-Account Support**: Manage Savings and Current accounts with real-time balance tracking.
-- **Transactions**: Secure Deposits, Withdrawals, and Fund Transfers with automatic validation.
-
-### 💳 Card Management
-- **Debit & Credit Cards**: Issue new cards, block/unblock for security, and manage expiration.
-- **Card Security**: Real-time status management directly from the dashboard.
-
-### 💰 Loan Management System
-- **Applications**: Customers can apply for various loan types (Home, Personal, etc.).
-- **Automated Disbursement**: An integrated workflow that, upon approval, automatically credits the customer's account using a stored procedure.
-
-### 📊 Real-time Analytics
-- **Branch Performance**: View which branches are handling the most volume.
-- **Transaction Trends**: Visual charts showing daily/monthly transaction patterns.
-- **Customer Tiers**: Automatic categorization of customers based on their balances.
+### Frontend
+- Responsive Admin Dashboard
+- Real-time Financial Analytics
+- Transaction History Viewer
+- Card Status Control Center
+- Automated Audit Log Monitor
+- Performance Trend Charts
 
 ---
 
-## 🛡️ Database Design (The DBMS Core)
+## Database Schema
 
-### 📊 Schema Overview
-The system consists of the following primary tables:
-- `Customers`: Stores personal and contact information.
-- `Accounts`: Linked to customers, stores current balances and account types.
-- `Transactions`: Detailed ledger of every financial move.
-- `Cards`: Management of physical/virtual cards linked to accounts.
-- `Loans`: Tracks loan applications, status, and repayment.
-- `Branches & Employees`: Management of the physical bank infrastructure.
-- `Audit_Logs`: A system-wide table populated by triggers.
+### Customer
+| Column | Type |
+|----------|----------|
+| customer_id | INT (PK) |
+| name | VARCHAR |
+| email | VARCHAR |
+| phone | VARCHAR |
+| address | TEXT |
 
-### ⚡ Triggers (Automated Logic)
-- **`Update_Balance_Trigger`**: Automatically increases/decreases account balances whenever a record is added to the `Transactions` table.
-- **`System_Audit_Trigger`**: Captures every `INSERT`, `UPDATE`, and `DELETE` action across the database and logs it into a central `Audit_Logs` table for security compliance.
-- **`Loan_Security_Trigger`**: Prevents the deletion of active loans.
+### Account
+| Column | Type |
+|----------|----------|
+| account_id | INT (PK) |
+| customer_id | INT (FK) |
+| account_type | VARCHAR |
+| balance | DECIMAL |
+| branch_id | INT (FK) |
 
-### ⚙️ Stored Procedures
-- **`Transfer_Funds`**: A transaction-safe procedure that handles the simultaneous debit of one account and credit of another, ensuring that money is never lost in transit.
-- **`Calculate_Interest`**: Iterates through savings accounts and applies monthly interest rates.
-- **`Disburse_Loan`**: Handles the entire logic of switching a loan to 'Active' and injecting the funds into the customer's account.
+### Transaction
+| Column | Type |
+|----------|----------|
+| transaction_id | INT (PK) |
+| account_id | INT (FK) |
+| transaction_type| VARCHAR |
+| amount | DECIMAL |
+| timestamp | DATETIME |
 
----
+### Card
+| Column | Type |
+|----------|----------|
+| card_id | INT (PK) |
+| account_id | INT (FK) |
+| card_number | VARCHAR |
+| card_type | VARCHAR |
+| status | VARCHAR |
 
-## 🛠️ Tech Stack
-| Component | Technology |
-| :--- | :--- |
-| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Framer Motion, Recharts |
-| **Backend** | Python 3.x, Flask, MySQL Connector |
-| **Database** | MySQL 8.0 |
-| **State Management** | React Context API |
-
----
-
-## 📥 Installation & Setup
-
-### 1. Database Configuration
-1. Install MySQL Server.
-2. Create a database: `CREATE DATABASE banking_management_system;`.
-3. Import the schema: `mysql -u root -p banking_management_system < banking_management_system.sql`.
-
-### 2. Backend Configuration
-1. `cd backend`
-2. `python -m venv venv && source venv/bin/activate`
-3. `pip install -r requirements.txt`
-4. Create a `.env` file:
-   ```env
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=your_password
-   DB_NAME=banking_management_system
-   ```
-5. `python app.py`
-
-### 3. Frontend Configuration
-1. `npm install`
-2. `npm run dev`
+### Loan
+| Column | Type |
+|----------|----------|
+| loan_id | INT (PK) |
+| customer_id | INT (FK) |
+| amount | DECIMAL |
+| loan_type | VARCHAR |
+| status | VARCHAR |
 
 ---
 
-## 🖥️ Usage Guide
-1. **Login**: Use the default administrator credentials (Username: `admin`, Password: `admin`).
-2. **Onboarding**: Start by adding a new customer, then create an account for them.
-3. **Operations**: Use the "Transactions" or "Procedures" tab to move money.
-4. **Security**: Monitor the "Audit Logs" to see how the database triggers are tracking your actions in real-time.
+## Technologies Used
+
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Recharts (Analytics)
+
+### Backend
+- Python 3.x
+- Flask
+- Flask-CORS
+
+### Database
+- MySQL
+
+### Tools
+- MySQL Workbench
+- VS Code
+- Git & GitHub
+- Postman
 
 ---
-*Developed for Advanced DBMS Project - 2026*
+
+## Project Structure
+
+```text
+BankingManagementSystem/
+│
+├── backend/
+│   ├── app.py (Flask Server)
+│   ├── database.py (Connection Pool)
+│   ├── config.py
+│   ├── routes/ (API Endpoints)
+│   └── venv/
+│
+├── src/ (Frontend)
+│   ├── pages/ (Dashboard Components)
+│   ├── components/
+│   ├── services/ (API Calls)
+│   └── lib/
+│
+├── banking_management_system.sql (Complete DB Schema)
+├── package.json
+└── README.md
+```
+
+---
+
+## Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/chandeeshmr9-alt/Banking-management-system.git
+```
+
+### Navigate to Project
+
+```bash
+cd Banking-management-system
+```
+
+### Configure Database
+
+1. Create MySQL database:
+
+```sql
+CREATE DATABASE banking_management_system;
+```
+
+2. Execute `banking_management_system.sql` in MySQL Workbench to set up tables, procedures, and triggers.
+
+### Setup Backend
+
+1. Navigate to backend:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+2. Run Server:
+```bash
+python app.py
+```
+
+### Setup Frontend
+
+1. Navigate to root and install:
+```bash
+npm install
+```
+
+2. Run Dashboard:
+```bash
+npm run dev
+```
+
+---
+
+## Implemented Queries
+
+1. Retrieve all registered customers.
+2. Display all active accounts for a specific customer.
+3. Customer and Account details (INNER JOIN).
+4. Full transaction history for an account (Subquery optimization).
+5. Total deposits per branch (GROUP BY).
+6. Branches with total volume exceeding $1M (HAVING).
+7. Identify customers with above-average balances.
+8. Customers with no active accounts (LEFT JOIN).
+9. High-value transactions within the last 24 hours.
+10. System-wide audit log retrieval for security monitoring.
+
+---
+
+## Stored Procedures
+
+### Transfer Funds
+
+```sql
+CALL TransferFunds(from_account, to_account, amount);
+```
+Ensures transaction safety by debiting and crediting accounts simultaneously.
+
+### Disburse Loan
+
+```sql
+CALL DisburseLoan(loan_id);
+```
+Automatically updates loan status and injects approved funds into the customer's account.
+
+---
+
+## Triggers
+
+### Update Balance Trigger
+
+Automatically updates the `balance` in the `Accounts` table whenever a new `Transaction` is inserted.
+
+### System Audit Trigger
+
+Captures all `INSERT`, `UPDATE`, and `DELETE` operations and logs them into the `Audit_Logs` table for real-time security tracking.
+
+---
+
+## Future Enhancements
+
+- Multi-factor Authentication (MFA)
+- Mobile App Integration (React Native)
+- AI-based Fraud Detection
+- Real-time SMS/Email Notifications
+- Investment Portfolio Management
+- Cryptocurrency Support
+
+---
+
+## Learning Outcomes
+
+- Advanced Relational Database Design
+- Transaction Safety & ACID Compliance
+- Stored Procedure & Trigger Implementation
+- Full-Stack API Integration
+- Real-time Data Visualization
+- Enterprise Security Logging
+
+---
+
+## Author
+
+**Chandeesh M R**
+
+Banking Management System Project for Advanced DBMS Laboratory.
