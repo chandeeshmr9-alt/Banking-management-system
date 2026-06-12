@@ -1,0 +1,16 @@
+# Large folders
+node_modules/
+dist/
+.venv/
+backend/venv/
+__pycache__/
+
+# Sensitive files (Passwords/API Keys)
+.env
+backend/.env
+
+# IDE files
+.vscode/
+.idea/
+*.log
+*.tsbuildinfo
